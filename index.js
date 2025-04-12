@@ -4,6 +4,7 @@ const express = require("express");
 const req = require("express/lib/request");
 const app= express();
 const pokemon = require('./routes/pokemon');
+const user = require('./routes/user');
 
 
 app.use(morgan('dev'));
@@ -24,6 +25,7 @@ app.get("/", (req,res,next)=>{
 });
 
 app.use("/pokemon", pokemon);
+app.use("/user",user);
 
 app.use((req, res, next)=>{
     res.status(404).json({code: 404, message: "URL no encontrada"});
