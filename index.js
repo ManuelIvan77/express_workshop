@@ -1,11 +1,16 @@
 const bodyparser=require('body-parser');
+//
 const morgan = require('morgan');
 const express = require("express");
 const req = require("express/lib/request");
+//Routers
 const app= express();
 const pokemon = require('./routes/pokemon');
 const user = require('./routes/user');
-
+//Middleware
+const auth = require('./middleware/auth');
+const notFound = require('./middleware/notFound');
+const index = require('./middleware/index');
 
 app.use(morgan('dev'));
 app.use(express.json());
@@ -20,16 +25,12 @@ PUT, modifica todos los elementos, un recurso completo
 DELETE, elimina un recurso
 */
 
-app.get("/", (req,res,next)=>{
-    return res.status(200).json({code: 1, message: "Bienvenido al Pokedek"});
-});
+app.use("/",index);
 
-app.use("/pokemon", pokemon);
 app.use("/user",user);
-
-app.use((req, res, next)=>{
-    res.status(404).json({code: 404, message: "URL no encontrada"});
-});
+app.use(auth);
+app.use("/pokemon", pokemon);
+app.use(notFound);
 
 app.listen(process.env.PORT||3000, ()=>{
     console.log("Server is running...");
