@@ -27,12 +27,14 @@ PUT, modifica todos los elementos, un recurso completo
 DELETE, elimina un recurso
 */
 
-app.use("/",index);
+app.get("/",index);
 
 app.use("/user",user);
 app.use(auth);
 app.use("/pokemon", pokemon);
-app.use(notFound);
+app.use((req, res, next)=>{
+    res.status(404).json({code: 404, message: "URL no encontrada"});
+});
 
 app.listen(process.env.PORT||3000, ()=>{
     console.log("Server is running...");
